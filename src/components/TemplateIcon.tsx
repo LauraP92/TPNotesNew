@@ -14,14 +14,17 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Zocial from 'react-native-vector-icons/Zocial';
 import { ColorValue } from 'react-native';
+import { IconProps } from 'react-native-vector-icons/Icon';
 
-interface Props {
+type IconFamilyType = 'MaterialIcon' | 'MaterialCommunityIcons' | 'Feather' | 'AntDesign' | 'Entypo' | 'EvilIcons' | 'FontAwesome' | 'FontAwesome5' | 'Fontisto' | 'Foundation' | 'Ionicons' | 'Octicons' | 'SimpleLine' | 'Zocial'
+
+interface Props extends IconProps {
     name: string,
-    family: string,
+    family: IconFamilyType,
     size: number,
     color: ColorValue,
 }
-const getIcon = (iconFamily: string) => {
+const getIcon = (iconFamily: IconFamilyType) => {
     switch (iconFamily) {
         case 'MaterialIcon':
             return MaterialIcon;

@@ -2,7 +2,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import TestComponent from './src/components/TestComponent';
 import HomeScreen from './src/screens/Home/Home';
 import NoteDetails from './src/screens/NoteDetails/NoteDetails';
 
@@ -10,9 +9,7 @@ import NoteDetails from './src/screens/NoteDetails/NoteDetails';
 const Stack = createNativeStackNavigator();
 const App: () => Node = () => {
   // const test = false
-
   // let name: string | null = 'Laura';
-
   // name = null
 
   return (
@@ -21,20 +18,21 @@ const App: () => Node = () => {
         screenOptions={{
           headerBackVisible: true,
           headerBackTitleVisible: false,
-          headerTitleStyle: {
-            color: '#3A96EB',
-            fontSize: 24,
-          },
+          headerTitle: true,
         }}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="NoteDetails" component={NoteDetails}></Stack.Screen>
+        <Stack.Screen name="NoteDetails" component={NoteDetails} options={{
+          title: '',
+          // headerStyle: {
+          //   backgroundColor: color,
+          // }
+        }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
-
 
     // <ScrollView>
     //   <TestComponent
@@ -53,7 +51,6 @@ const App: () => Node = () => {
 };
 
 const styles = StyleSheet.create({
-
 });
 
 export default App;

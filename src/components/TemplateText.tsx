@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextProps, TextStyle, View } from 'react-native';
+import { StyleSheet, Text, TextProps, TextStyle } from 'react-native';
 import React, { FC } from 'react';
 import { BLACK } from '../constants/COLORS';
 import { FONT_SMALL, SPACE_SMALL } from '../constants/LAYOUT';

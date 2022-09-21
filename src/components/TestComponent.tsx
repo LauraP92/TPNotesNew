@@ -2,12 +2,13 @@ import { ColorValue, Pressable, StyleSheet, Text, TextStyle, View, ViewStyle } f
 import React, { FC, useState } from 'react'
 
 interface Props {
-    type: 'large' | 'medium' | 'small',
+    type?: 'large' | 'medium' | 'small',
     title: { name: string | null },
     color: ColorValue,
     textStyle: TextStyle,
     containerStyle: ViewStyle | (ViewStyle | false)[],
     testProp?: boolean | number | string | boolean[],
+    test2: string,
 }
 
 const TestComponent: FC<Props> = ({ title, color, textStyle, containerStyle, testProp }) => {
@@ -27,5 +28,4 @@ const TestComponent: FC<Props> = ({ title, color, textStyle, containerStyle, tes
 export default TestComponent
 
 const styles = StyleSheet.create({
-
 })
