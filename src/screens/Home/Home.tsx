@@ -12,6 +12,7 @@ import AddNoteButton from '../../components/AddNoteButton'
 import { NoteType } from '../../types/NoteTypes'
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { TEXTURES } from '../../constants/TEXTURES'
 
 interface Props {
     navigation: NativeStackNavigationProp<any>
@@ -58,27 +59,6 @@ const Home: FC<Props> = ({ navigation }) => {
         }
     }, [isFocused])
 
-
-    // const notes = [{
-    //     id: 1,
-    //     title: 'First note',
-    //     description: "hbhbhbhjv",
-    //     color: BLUE,
-    // },
-    // {
-    //     id: 2,
-    //     title: "Second Note",
-    //     description: "",
-    //     color: PINK,
-    // },
-    // {
-    //     id: 3,
-    //     title: "Third Note",
-    //     description: "",
-    //     color: GREEN,
-    // }]
-
-
     return (
         <View style={styles.container}>
             <View style={styles.searchInput}>
@@ -111,9 +91,11 @@ const Home: FC<Props> = ({ navigation }) => {
                             id={note.id}
                             title={note.title}
                             description={note.description}
-                            color={note.color}
+                            backgroundColor={note.noteDesign.backgroundColor}
+                            textColor={note.noteDesign.textColor}
                             key={note.id}
                             navigation={navigation}
+                            imageSource={TEXTURES[note?.noteTextureId].image}
                         />
                     )
                 })

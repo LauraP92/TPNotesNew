@@ -4,5 +4,9 @@ export type NoteType = {
     id: number,
     title: string | undefined,
     description: string | undefined,
-    color: ColorValue
+    noteDesign: {
+        backgroundColor: ColorValue,
+        textColor: ColorValue,
+    },
+    noteTextureId: number | null,
 }

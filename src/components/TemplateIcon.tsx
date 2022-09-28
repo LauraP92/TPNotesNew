@@ -16,7 +16,7 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import { ColorValue } from 'react-native';
 import { IconProps } from 'react-native-vector-icons/Icon';
 
-type IconFamilyType = 'MaterialIcon' | 'MaterialCommunityIcons' | 'Feather' | 'AntDesign' | 'Entypo' | 'EvilIcons' | 'FontAwesome' | 'FontAwesome5' | 'Fontisto' | 'Foundation' | 'Ionicons' | 'Octicons' | 'SimpleLine' | 'Zocial'
+export type IconFamilyType = 'MaterialIcon' | 'MaterialCommunityIcons' | 'Feather' | 'AntDesign' | 'Entypo' | 'EvilIcons' | 'FontAwesome' | 'FontAwesome5' | 'Fontisto' | 'Foundation' | 'Ionicons' | 'Octicons' | 'SimpleLine' | 'Zocial'
 
 interface Props extends IconProps {
     name: string,

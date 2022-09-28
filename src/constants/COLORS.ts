@@ -6,3 +6,4 @@ export const BEIGE = '#EEDFC9';
 export const GREY = '#CAD0DC';
 export const GREEN = '#E5F0CD';
 export const KAKI = '#CCDCDE';
+export const PURPLE = '#754f8c';
