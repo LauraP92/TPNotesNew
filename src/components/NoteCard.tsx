@@ -1,37 +1,37 @@
-import { ColorValue, Image, Pressable, StyleSheet } from 'react-native';
+import { ColorValue, Image, Pressable, StyleSheet, View } from 'react-native';
 import React, { FC } from 'react';
-import { SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_XLARGE } from '../constants/LAYOUT';
+import { BORDER_SMALL, RADIUS_MEDIUM, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_MEDIUM, SPACE_XLARGE, SPACE_XXLARGE } from '../constants/LAYOUT';
 import TemplateText from './TemplateText';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BLACK, WHITE } from '../constants/COLORS';
+import { BLUE, WHITE } from '../constants/COLORS';
+import TemplateIcon from './TemplateIcon';
 
 interface Props {
     title: string | undefined,
     description: string | undefined,
     backgroundColor: ColorValue,
     textColor: ColorValue,
-    id: number,
-    navigation: NativeStackNavigationProp<any>,
-    imageSource: number | { uri: string },
+    imageSource: false | number | { uri: string },
+    onLongPress: () => void,
+    onPress: () => void,
+    isSelected: boolean,
+    selectionStarted: boolean,
 }
 
-const NoteCard: FC<Props> = ({ id, navigation, backgroundColor, textColor, title, description, imageSource }) => {
-
+const NoteCard: FC<Props> = ({ backgroundColor, textColor, title, description, imageSource, onLongPress, isSelected, onPress, selectionStarted }) => {
     return (
         <Pressable
-            style={[styles.button, { backgroundColor: backgroundColor, borderColor: backgroundColor === WHITE ? BLACK : WHITE, borderWidth: backgroundColor === WHITE ? 1 : 0 }]}
-            onPress={() => {
-                navigation.navigate('NoteDetails', {
-                    id: id,
-                })
-            }}
+            style={[styles.button, { backgroundColor: backgroundColor, borderColor: !backgroundColor || backgroundColor === WHITE ? BLUE : WHITE, borderWidth: !backgroundColor || backgroundColor === WHITE ? BORDER_SMALL : 0 }]}
+            onPress={onPress}
+            onLongPress={onLongPress}
         >
-            <Image
-                style={styles.image}
-                source={imageSource}
-            />
-            <TemplateText style={{ color: textColor }}>{title || description}</TemplateText>
-            {/* <TemplateText>{title ? title : description}</TemplateText> */}
+            {!!imageSource && (<Image style={styles.image} source={imageSource} />)}
+            <View style={styles.cardContent}>
+                <TemplateText style={{ color: textColor }}>{title || description}</TemplateText>
+                {/* <TemplateText>{title ? title : description}</TemplateText> */}
+                {!!selectionStarted && (<Pressable style={styles.circle} onPress={onPress}>
+                    {!!isSelected && <TemplateIcon style={styles.icon} name={'check'} family={'Feather'} size={20} color={BLUE}></TemplateIcon>}
+                </Pressable>)}
+            </View>
         </Pressable >
     );
 };
@@ -41,7 +41,7 @@ export default NoteCard;
 const styles = StyleSheet.create({
     button: {
         height: 80,
-        marginRight: SPACE_XLARGE,
+        marginRight: SPACE_XXLARGE,
         marginBottom: SPACE_XLARGE,
         justifyContent: 'center',
         borderTopRightRadius: 40,
@@ -53,5 +53,23 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH,
         position: 'absolute',
         opacity: 0.5,
+    },
+    cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    circle: {
+        marginHorizontal: SPACE_MEDIUM,
+        height: 25,
+        width: 25,
+        borderRadius: RADIUS_MEDIUM,
+        borderColor: BLUE,
+        borderWidth: BORDER_SMALL,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    iconCheck: {
+        position: 'absolute',
     },
 });

@@ -1,16 +1,16 @@
-import { StyleSheet, Pressable } from 'react-native';
+import { StyleSheet, Pressable, ColorValue } from 'react-native';
 import React, { FC } from 'react';
 import TemplateIcon from './TemplateIcon';
-import { BLUE } from '../constants/COLORS';
 
 interface Props {
-    onPress: () => void
+    onPress: () => void,
+    color: ColorValue,
 }
 
-const DeleteNoteButton: FC<Props> = ({ onPress }) => {
+const DeleteNoteButton: FC<Props> = ({ onPress, color }) => {
     return (
         <Pressable onPress={onPress} >
-            <TemplateIcon name="trash" size={30} color={BLUE} family='Feather' />
+            <TemplateIcon name="trash" size={30} color={color} family='Feather' />
         </Pressable>
     );
 };

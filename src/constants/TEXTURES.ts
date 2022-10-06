@@ -8,31 +8,35 @@ import PaperTexture7 from "../assets/PaperTexture7.jpeg";
 
 export const TEXTURES = [
     {
-    image: PaperTexture1,
+    image: null,
     id: 0,
 },
     {
-    image: PaperTexture2,
+    image: PaperTexture1,
     id: 1,
 },
     {
-    image: PaperTexture3,
+    image: PaperTexture2,
     id: 2,
 },
     {
-    image: PaperTexture4,
+    image: PaperTexture3,
     id: 3,
 },
     {
-    image: PaperTexture5,
+    image: PaperTexture4,
     id: 4,
 },
     {
-    image: PaperTexture6,
+    image: PaperTexture5,
     id: 5,
 },
     {
-    image: PaperTexture7,
+    image: PaperTexture6,
     id: 6,
+},
+    {
+    image: PaperTexture7,
+    id: 7,
 },
 ]

@@ -3,8 +3,8 @@ import React, { FC, useEffect, useState } from 'react'
 import { RouteProp, useIsFocused } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { TextInput } from 'react-native-gesture-handler';
-import { BEIGE, BLACK, GREEN, GREY, KAKI, PINK, PURPLE, WHITE } from '../../constants/COLORS';
-import { FONT_XLARGE, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_MEDIUM } from '../../constants/LAYOUT';
+import { BEIGE, GREEN, GREY, KAKI, PINK, PURPLE, WHITE } from '../../constants/COLORS';
+import { FONT_XLARGE, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_MEDIUM, SPACE_SMALL } from '../../constants/LAYOUT';
 import { NoteType } from '../../types/NoteTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { findIndex } from 'lodash';
@@ -33,6 +33,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
     const headerHeight = useHeaderHeight();
     const id = route?.params?.id;
     const isFocused = useIsFocused()
+    const [isActive, setIsActive] = useState(false)
     // const isFocused = navigation.isFocused()
 
     const [notes, setNotes] = useState<NoteType[]>([]);
@@ -113,10 +114,12 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
         navigation.setOptions({
             headerStyle: {
             },
+            headerTintColor: currentNote.noteDesign.textColor,
             headerTransparent: true,
             headerRight: () => {
                 return (
                     <DeleteNoteButton
+                        color={currentNote.noteDesign.textColor}
                         onPress={() => {
                             setModalVisible(true)
                         }}
@@ -128,28 +131,32 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
 
     const colorsArray = [
         {
-            backgroundColor: PINK,
-            textColor: WHITE,
+            backgroundColor: WHITE,
+            textColor: 'black',
         },
         {
             backgroundColor: BEIGE,
-            textColor: BLACK,
+            textColor: 'brown',
         },
         {
             backgroundColor: KAKI,
-            textColor: BLACK,
+            textColor: 'green',
         },
         {
             backgroundColor: GREEN,
-            textColor: BLACK,
+            textColor: 'green',
         },
         {
             backgroundColor: GREY,
-            textColor: WHITE,
+            textColor: 'black',
+        },
+        {
+            backgroundColor: PINK,
+            textColor: 'red',
         },
         {
             backgroundColor: PURPLE,
-            textColor: WHITE,
+            textColor: 'black',
         }
     ]
 
@@ -158,6 +165,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
             name: 'format-color-fill',
             family: 'MaterialCommunityIcons',
             size: 40,
+            color: currentNote.noteDesign.textColor,
             onPress: () => {
                 // if (showColors === false) {
                 //     setShowColors(true);
@@ -168,32 +176,37 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                 // showColors === false ? setShowColors(true) : setShowColors(false);
                 // setShowColors(showColors === false ? true : false);
                 setShowColors(!showColors);
+                setIsActive(true)
             },
         },
-        {
-            name: 'bold',
-            family: 'FontAwesome5',
-            size: 30,
-            onPress: () => { },
-        },
-        {
-            name: 'italic',
-            family: 'Feather',
-            size: 30,
-            onPress: () => { },
-        },
-        {
-            name: 'format-underline',
-            family: 'MaterialCommunityIcons',
-            size: 35,
-            onPress: () => { },
-        },
-        {
-            name: 'check-square',
-            family: 'Feather',
-            size: 35,
-            onPress: () => { },
-        },
+        // {
+        //     name: 'bold',
+        //     family: 'FontAwesome5',
+        //     size: 30,
+        //     color: currentNote.noteDesign.textColor,
+        //     onPress: () => { setIsActive(false) },
+        // },
+        // {
+        //     name: 'italic',
+        //     family: 'Feather',
+        //     size: 30,
+        //     color: currentNote.noteDesign.textColor,
+        //     onPress: () => { setIsActive(false) },
+        // },
+        // {
+        //     name: 'format-underline',
+        //     family: 'MaterialCommunityIcons',
+        //     size: 35,
+        //     color: currentNote.noteDesign.textColor,
+        //     onPress: () => { setIsActive(false) },
+        // },
+        // {
+        //     name: 'check-square',
+        //     family: 'Feather',
+        //     size: 35,
+        //     color: currentNote.noteDesign.textColor,
+        //     onPress: () => { setIsActive(false) },
+        // },
     ];
 
     return (
@@ -231,17 +244,22 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                         }}
                         value={currentNote.description}
                     />
-                    {showColors === false ? null : (
-                        <View>
+                    {showColors === false ? null :
+                        (<View>
                             <ScrollView
-                                contentContainerStyle={styles.contentContainer}
+                                contentContainerStyle={styles.scrollviewContainer}
                                 showsHorizontalScrollIndicator={false}
+                                snapToInterval={90}
+                                decelerationRate={'fast'}
+                                disableIntervalMomentum={true}
+                                scrollEventThrottle={16}
                                 horizontal>
                                 {TEXTURES.map((item) => {
                                     return (
                                         <TexturePickerButton
                                             key={item.id}
                                             imageSource={item.image}
+                                            color={currentNote.noteDesign.textColor}
                                             selected={currentNote?.noteTextureId === item.id}
                                             onPress={() => {
                                                 setCurrentNote({
@@ -256,6 +274,10 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                             <ScrollView
                                 contentContainerStyle={styles.scrollviewContainer}
                                 showsHorizontalScrollIndicator={false}
+                                snapToInterval={SCREEN_WIDTH}
+                                decelerationRate={'fast'}
+                                disableIntervalMomentum={true}
+                                scrollEventThrottle={16}
                                 horizontal>
                                 {colorsArray.map((item) => {
                                     return (
@@ -273,11 +295,8 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                                     )
                                 })}
                             </ScrollView>
-
                         </View>
-
-
-                    )}
+                        )}
                     <View style={styles.icons}>
                         {Icons.map((icon) => {
                             return (
@@ -341,6 +360,7 @@ const styles = StyleSheet.create({
     },
     scrollviewContainer: {
         marginBottom: SPACE_MEDIUM,
+        paddingHorizontal: SPACE_SMALL,
         flexGrow: 1,
         justifyContent: 'space-between',
         alignItems: 'flex-end',

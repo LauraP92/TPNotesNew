@@ -1,9 +1,9 @@
-import { StyleSheet, View } from 'react-native'
-import React, { FC, useState, useEffect } from 'react'
-import { BORDER_SMALL, FONT_LARGE, FONT_XLARGE, SPACE_LARGE, SPACE_MEDIUM } from '../../constants/LAYOUT'
+import { StyleSheet, View, TextInput } from 'react-native'
+import React, { FC, useState, useEffect, useRef } from 'react'
+import { BORDER_SMALL, FONT_LARGE, FONT_XLARGE, SPACE_MEDIUM } from '../../constants/LAYOUT'
 import { BLUE } from '../../constants/COLORS'
 import TemplateIcon from '../../components/TemplateIcon'
-import { ScrollView, TextInput } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native-gesture-handler'
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import NoteCard from '../../components/NoteCard'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -13,15 +13,31 @@ import { NoteType } from '../../types/NoteTypes'
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TEXTURES } from '../../constants/TEXTURES'
+import CancelButton from '../../components/CancelButton'
+import DeleteCardButton from '../../components/DeleteCardButton'
+
 
 interface Props {
-    navigation: NativeStackNavigationProp<any>
+    navigation: NativeStackNavigationProp<any>,
 }
 
 const Home: FC<Props> = ({ navigation }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [notes, setNotes] = useState<NoteType[]>([])
     const isFocused = useIsFocused()
+    const [selectedCardIds, setSelectedCardIds] = useState<number[]>([])
+    const searchRef = useRef()
+
+    const selectCard = (id: number) => {
+        if (selectedCardIds.indexOf(id) !== -1) {
+            const filteredCardIds = selectedCardIds.filter((item) => {
+                return id !== item
+            })
+            setSelectedCardIds(filteredCardIds)
+        } else {
+            setSelectedCardIds([...selectedCardIds, id])
+        }
+    }
 
     const filteredNotes = notes.filter(card => {
         return (
@@ -59,28 +75,41 @@ const Home: FC<Props> = ({ navigation }) => {
         }
     }, [isFocused])
 
+
     return (
         <View style={styles.container}>
-            <View style={styles.searchInput}>
-                <TextInput
-                    style={styles.search}
-                    placeholder={'Search notes'}
-                    placeholderTextColor={`${BLUE}80`}
-                    onChangeText={text => {
-                        setSearchTerm(text);
-                    }}
-                    value={searchTerm}
-                />
-                <TemplateIcon
-                    style={styles.icon}
-                    name={searchTerm ? "close-outline" : "search"}
-                    size={20}
-                    color={BLUE}
-                    family={'Ionicons'}
-                    onPress={() => {
-                        setSearchTerm('');
-                    }}
-                />
+            <View style={styles.searchContainer}>
+                <View style={styles.searchInput}>
+                    <TextInput
+                        ref={searchRef}
+                        style={styles.search}
+                        placeholder={'Search notes'}
+                        placeholderTextColor={`${BLUE}80`}
+                        maxLength={22}
+                        onChangeText={text => {
+                            setSearchTerm(text);
+                        }}
+                        value={searchTerm}
+                    />
+                    <TemplateIcon
+                        style={styles.icon}
+                        name={searchTerm ? "close-outline" : "search"}
+                        size={20}
+                        color={BLUE}
+                        family={'Ionicons'}
+                        onPress={() => {
+                            setSearchTerm('');
+                        }}
+                    />
+                </View>
+                <CancelButton onPress={() => {
+                    if (searchTerm) {
+                        searchRef.current.blur()
+                        setSearchTerm('')
+                    } else if (searchTerm === '') {
+                        searchRef.current.blur()
+                    }
+                }}></CancelButton>
             </View>
             <ScrollView style={styles.scrollViewContainer}>
                 {filteredNotes.length === 0 && searchTerm ? <View style={styles.noResultContainer}>
@@ -88,6 +117,8 @@ const Home: FC<Props> = ({ navigation }) => {
                 </View> : filteredNotes.map((note) => {
                     return (
                         <NoteCard
+                            isSelected={selectedCardIds.indexOf(note.id) !== -1}
+                            selectionStarted={selectedCardIds.length !== 0}
                             id={note.id}
                             title={note.title}
                             description={note.description}
@@ -95,13 +126,27 @@ const Home: FC<Props> = ({ navigation }) => {
                             textColor={note.noteDesign.textColor}
                             key={note.id}
                             navigation={navigation}
-                            imageSource={TEXTURES[note?.noteTextureId].image}
+                            imageSource={!!note?.noteTextureId && TEXTURES[note?.noteTextureId]?.image}
+                            onLongPress={() => {
+                                selectCard(note.id)
+                            }}
+                            onPress={() => {
+                                if (selectedCardIds.length !== 0) {
+                                    selectCard(note.id)
+                                }
+                                else {
+                                    navigation.navigate('NoteDetails', {
+                                        id: note.id,
+                                    })
+                                }
+                            }}
                         />
                     )
                 })
                 }
             </ScrollView>
-            <AddNoteButton navigation={navigation}></AddNoteButton>
+            <AddNoteButton navigation={navigation} />
+            {/* <DeleteCardButton /> */}
         </View >
     )
 }
@@ -113,6 +158,11 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: getStatusBarHeight(),
     },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+    },
     searchInput: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -120,16 +170,21 @@ const styles = StyleSheet.create({
         borderColor: BLUE,
         justifyContent: 'space-between',
         borderRadius: 23,
-        margin: SPACE_LARGE,
+        margin: SPACE_MEDIUM,
         height: 50,
+        width: 290,
     },
     search: {
         fontSize: FONT_XLARGE,
         color: BLUE,
         marginLeft: SPACE_MEDIUM,
+        flex: 1,
     },
     icon: {
         marginRight: SPACE_MEDIUM,
+    },
+    iconCheck: {
+        position: 'absolute',
     },
     scrollViewContainer: {
         flex: 1,
@@ -141,5 +196,5 @@ const styles = StyleSheet.create({
         color: BLUE,
         fontSize: FONT_LARGE,
         textAlign: 'center',
-    }
+    },
 })

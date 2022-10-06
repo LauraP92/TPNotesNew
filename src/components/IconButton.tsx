@@ -1,7 +1,6 @@
-import { StyleSheet, Pressable } from 'react-native';
+import { StyleSheet, Pressable, ColorValue } from 'react-native';
 import React, { FC } from 'react';
 import TemplateIcon, { IconFamilyType } from './TemplateIcon';
-import { BLUE } from '../constants/COLORS';
 import { SPACE_MEDIUM } from '../constants/LAYOUT';
 
 interface Props {
@@ -10,16 +9,17 @@ interface Props {
     family: IconFamilyType,
     onPress: () => void,
     isActive: boolean,
+    color: ColorValue,
 }
 
-const IconButton: FC<Props> = ({ name, size, onPress, family, isActive }) => {
+const IconButton: FC<Props> = ({ name, size, color, onPress, family, isActive }) => {
     return (
         <Pressable style={[styles.container, { opacity: isActive === true ? 1 : 0.5 }]} onPress={onPress}>
             <TemplateIcon
                 name={name}
                 size={size}
                 family={family}
-                color={BLUE}
+                color={color}
             />
         </Pressable>
     );

@@ -6,7 +6,7 @@ export type NoteType = {
     description: string | undefined,
     noteDesign: {
         backgroundColor: ColorValue,
-        textColor: ColorValue,
+        textColor: ColorValue | string,
     },
     noteTextureId: number | null,
 }

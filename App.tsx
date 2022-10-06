@@ -8,9 +8,6 @@ import NoteDetails from './src/screens/NoteDetails/NoteDetails';
 
 const Stack = createNativeStackNavigator();
 const App: () => Node = () => {
-  // const test = false
-  // let name: string | null = 'Laura';
-  // name = null
 
   return (
     <NavigationContainer>
@@ -27,26 +24,9 @@ const App: () => Node = () => {
         />
         <Stack.Screen name="NoteDetails" component={NoteDetails} options={{
           title: '',
-          // headerStyle: {
-          //   backgroundColor: color,
-          // }
         }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
-
-    // <ScrollView>
-    //   <TestComponent
-    //     containerStyle={[{ flex: 1 }, test && { borderBottomWidth: 1 }]}
-    //     textStyle={{ fontSize: 40, borderStyle: 'solid' }} color='#000000' title={{ name: 'Test' }}></TestComponent>
-    //   <TemplateText>
-    //     bbbbbbbbb
-    //     <TemplateText style={{ color: 'red' }} onPress={() => console.log('Laura')}>
-    //       bgujuybjvjvy
-    //     </TemplateText>
-    //     aaaaaaaaaaa
-    //   </TemplateText>
-    //   <TemplateIcon name='add' family='Ionicons' size={20} color='#000000' ></TemplateIcon>
-    // </ScrollView>
   );
 };
 
