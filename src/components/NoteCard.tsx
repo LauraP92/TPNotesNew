@@ -20,14 +20,14 @@ interface Props {
 const NoteCard: FC<Props> = ({ backgroundColor, textColor, title, description, imageSource, onLongPress, isSelected, onPress, selectionStarted }) => {
     return (
         <Pressable
-            style={[styles.button, { backgroundColor: backgroundColor, borderColor: !backgroundColor || backgroundColor === WHITE ? BLUE : WHITE, borderWidth: !backgroundColor || backgroundColor === WHITE ? BORDER_SMALL : 0 }]}
+            style={[styles.button, { backgroundColor: backgroundColor, borderColor: !backgroundColor && !imageSource || backgroundColor === WHITE ? BLUE : undefined, borderWidth: !backgroundColor && !imageSource || backgroundColor === WHITE ? BORDER_SMALL : 0 }]}
             onPress={onPress}
             onLongPress={onLongPress}
         >
             {!!imageSource && (<Image style={styles.image} source={imageSource} />)}
             <View style={styles.cardContent}>
                 <TemplateText style={{ color: textColor }}>{title || description}</TemplateText>
-                {/* <TemplateText>{title ? title : description}</TemplateText> */}
+                <TemplateIcon name='paint-roller' family='FontAwesome5' size={60} color={textColor} style={{ transform: [{ rotateZ: '-90deg' }, { rotateX: '360deg' }], opacity: 0.5 }}></TemplateIcon>
                 {!!selectionStarted && (<Pressable style={styles.circle} onPress={onPress}>
                     {!!isSelected && <TemplateIcon style={styles.icon} name={'check'} family={'Feather'} size={20} color={BLUE}></TemplateIcon>}
                 </Pressable>)}

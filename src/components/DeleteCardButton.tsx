@@ -5,14 +5,15 @@ import { BORDER_MEDIUM, RADIUS_XXLARGE, SPACE_LARGE } from '../constants/LAYOUT'
 import TemplateIcon from './TemplateIcon';
 
 interface Props {
+    onPress: () => void,
 }
 
-const DeleteCardButton: FC<Props> = () => {
+const DeleteCardButton: FC<Props> = ({ onPress }) => {
     return (
         <View style={styles.container}>
             <Pressable
                 style={styles.circle}
-                onPress={() => { }}>
+                onPress={onPress}>
                 <TemplateIcon name="trash" size={35} color={BLUE} family='Feather' />
             </Pressable>
         </View>

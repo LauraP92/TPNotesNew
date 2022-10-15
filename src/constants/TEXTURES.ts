@@ -5,6 +5,8 @@ import PaperTexture4 from "../assets/PaperTexture4.jpeg";
 import PaperTexture5 from "../assets/PaperTexture5.jpeg";
 import PaperTexture6 from "../assets/PaperTexture6.jpeg";
 import PaperTexture7 from "../assets/PaperTexture7.jpeg";
+import PaperTexture8 from "../assets/PaperTexture8.jpeg";
+import PaperTexture9 from "../assets/PaperTexture9.jpeg";
 
 export const TEXTURES = [
     {
@@ -38,5 +40,13 @@ export const TEXTURES = [
     {
     image: PaperTexture7,
     id: 7,
+},
+    {
+    image: PaperTexture8,
+    id: 8,
+},
+    {
+    image: PaperTexture9,
+    id: 9,
 },
 ]

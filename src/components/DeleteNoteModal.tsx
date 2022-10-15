@@ -3,32 +3,14 @@ import React, { Dispatch, FC, SetStateAction } from 'react'
 import TemplateText from './TemplateText'
 import ModalButtons from './ModalButtons'
 import { BLACK, WHITE } from '../constants/COLORS'
-import { NoteType } from '../types/NoteTypes'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 
 interface Props {
     modalVisible: boolean,
     setModalVisible: Dispatch<SetStateAction<boolean>>,
-    notes: NoteType[],
-    setNotes: Dispatch<SetStateAction<NoteType[]>>,
-    id: number,
-    navigation: NativeStackNavigationProp<any>,
+    onDelete: () => void,
 }
 
-const DeleteNoteModal: FC<Props> = ({ navigation, modalVisible, setModalVisible, notes, setNotes, id }) => {
-
-    const storeData = async (key: string, value: NoteType[]) => {
-        try {
-            const jsonValue = JSON.stringify(value);
-            await AsyncStorage.setItem(key, jsonValue);
-        } catch (e) {
-            // saving error
-        }
-    };
-
-
+const DeleteNoteModal: FC<Props> = ({ modalVisible, setModalVisible, onDelete }) => {
     return (
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
             <View style={styles.container}>
@@ -37,13 +19,9 @@ const DeleteNoteModal: FC<Props> = ({ navigation, modalVisible, setModalVisible,
                     <View>
                         <ModalButtons
                             text={'Delete'}
-                            onPress={async () => {
-                                const newNotes = notes.filter((item) => {
-                                    return item?.id !== id
-                                })
-                                await storeData('notes', newNotes)
-                                navigation.goBack()
-                            }} />
+                            onPress={onDelete}
+                        />
+
 
                         <ModalButtons
                             text={'Cancel'}

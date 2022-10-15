@@ -15,6 +15,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TEXTURES } from '../../constants/TEXTURES'
 import CancelButton from '../../components/CancelButton'
 import DeleteCardButton from '../../components/DeleteCardButton'
+import SelectAllButton from '../../components/SelectAllButton'
+import DeleteNoteModal from '../../components/DeleteNoteModal'
 
 
 interface Props {
@@ -27,6 +29,9 @@ const Home: FC<Props> = ({ navigation }) => {
     const isFocused = useIsFocused()
     const [selectedCardIds, setSelectedCardIds] = useState<number[]>([])
     const searchRef = useRef()
+    const [isActive, setIsActive] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false)
+    const [isPressed, setIsPressed] = useState(false)
 
     const selectCard = (id: number) => {
         if (selectedCardIds.indexOf(id) !== -1) {
@@ -37,6 +42,15 @@ const Home: FC<Props> = ({ navigation }) => {
         } else {
             setSelectedCardIds([...selectedCardIds, id])
         }
+    }
+
+
+    const deleteCards = () => {
+        const newNotes = notes.filter((item) => {
+            return selectedCardIds.indexOf(item.id) === -1
+        })
+        setNotes(newNotes)
+        storeData('notes', newNotes)
     }
 
     const filteredNotes = notes.filter(card => {
@@ -78,14 +92,32 @@ const Home: FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            {!!isActive && <SelectAllButton onPress={() => {
+                if (selectedCardIds?.length !== notes?.length) {
+                    const allCardsSelected = notes.map((card) => { return card.id })
+                    setSelectedCardIds(allCardsSelected)
+                } else {
+                    setSelectedCardIds([])
+                }
+            }}
+                onClose={() => {
+                    setSelectedCardIds([])
+                    setIsActive(false)
+                }}></SelectAllButton>}
             <View style={styles.searchContainer}>
-                <View style={styles.searchInput}>
+                <View style={[styles.searchInput, { width: !!isPressed ? 290 : 350 }]}>
                     <TextInput
                         ref={searchRef}
                         style={styles.search}
                         placeholder={'Search notes'}
                         placeholderTextColor={`${BLUE}80`}
                         maxLength={22}
+                        onPressIn={() => {
+                            setIsPressed(true)
+                        }}
+                        // onPressOut={() => {
+                        //     setIsPressed(false)
+                        // }}
                         onChangeText={text => {
                             setSearchTerm(text);
                         }}
@@ -102,14 +134,15 @@ const Home: FC<Props> = ({ navigation }) => {
                         }}
                     />
                 </View>
-                <CancelButton onPress={() => {
+                {!!isPressed ? (<CancelButton onPress={() => {
                     if (searchTerm) {
                         searchRef.current.blur()
                         setSearchTerm('')
                     } else if (searchTerm === '') {
                         searchRef.current.blur()
                     }
-                }}></CancelButton>
+                    setIsPressed(false)
+                }} />) : null}
             </View>
             <ScrollView style={styles.scrollViewContainer}>
                 {filteredNotes.length === 0 && searchTerm ? <View style={styles.noResultContainer}>
@@ -118,26 +151,29 @@ const Home: FC<Props> = ({ navigation }) => {
                     return (
                         <NoteCard
                             isSelected={selectedCardIds.indexOf(note.id) !== -1}
-                            selectionStarted={selectedCardIds.length !== 0}
+                            selectionStarted={selectedCardIds.length !== 0 || isActive}
                             id={note.id}
                             title={note.title}
                             description={note.description}
                             backgroundColor={note.noteDesign.backgroundColor}
                             textColor={note.noteDesign.textColor}
+                            // fontSize={note.fontSize.name}
                             key={note.id}
                             navigation={navigation}
                             imageSource={!!note?.noteTextureId && TEXTURES[note?.noteTextureId]?.image}
                             onLongPress={() => {
                                 selectCard(note.id)
+                                setIsActive(true)
                             }}
                             onPress={() => {
-                                if (selectedCardIds.length !== 0) {
+                                if (selectedCardIds.length !== 0 || isActive) {
                                     selectCard(note.id)
                                 }
                                 else {
                                     navigation.navigate('NoteDetails', {
                                         id: note.id,
                                     })
+
                                 }
                             }}
                         />
@@ -145,8 +181,20 @@ const Home: FC<Props> = ({ navigation }) => {
                 })
                 }
             </ScrollView>
-            <AddNoteButton navigation={navigation} />
-            {/* <DeleteCardButton /> */}
+            {!!isActive ? <DeleteCardButton onPress={() => {
+                setModalVisible(true)
+            }} /> : <AddNoteButton navigation={navigation} />}
+
+            <DeleteNoteModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                onDelete={() => {
+                    deleteCards()
+                    setSelectedCardIds([])
+                    setIsActive(false)
+                    setModalVisible(false)
+                }}
+            />
         </View >
     )
 }
@@ -172,7 +220,6 @@ const styles = StyleSheet.create({
         borderRadius: 23,
         margin: SPACE_MEDIUM,
         height: 50,
-        width: 290,
     },
     search: {
         fontSize: FONT_XLARGE,
@@ -188,6 +235,7 @@ const styles = StyleSheet.create({
     },
     scrollViewContainer: {
         flex: 1,
+        marginBottom: 80,
     },
     noResultContainer: {
         flex: 1,

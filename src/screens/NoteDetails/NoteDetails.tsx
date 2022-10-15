@@ -3,8 +3,8 @@ import React, { FC, useEffect, useState } from 'react'
 import { RouteProp, useIsFocused } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { TextInput } from 'react-native-gesture-handler';
-import { BEIGE, GREEN, GREY, KAKI, PINK, PURPLE, WHITE } from '../../constants/COLORS';
-import { FONT_XLARGE, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_MEDIUM, SPACE_SMALL } from '../../constants/LAYOUT';
+import { WHITE } from '../../constants/COLORS';
+import { FONT_MEDIUM, FONT_XLARGE, FONT_XSMALL, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_MEDIUM, SPACE_SMALL } from '../../constants/LAYOUT';
 import { NoteType } from '../../types/NoteTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { findIndex } from 'lodash';
@@ -15,6 +15,7 @@ import IconButton from '../../components/IconButton';
 import ColorPickerButton from '../../components/ColorPickerButton';
 import { TEXTURES } from '../../constants/TEXTURES';
 import TexturePickerButton from '../../components/TexturePickerButton';
+import FontSizeButton from '../../components/FontSizeButton';
 
 interface Props {
     route: RouteProp<{
@@ -42,13 +43,18 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
         title: '',
         description: '',
         noteDesign: {
-            backgroundColor: '',
-            textColor: '',
+            backgroundColor: undefined,
+            textColor: 'black',
         },
         noteTextureId: 0,
+        fontSize: {
+            name: 'Mediun',
+            size: FONT_MEDIUM,
+        },
     })
     const [modalVisible, setModalVisible] = useState(false)
     const [showColors, setShowColors] = useState(false)
+    const [showFontSize, setShowFontSize] = useState(false)
 
 
     const getData = async (key: string) => {
@@ -72,7 +78,8 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
 
     const saveOnLeaveScreen = () => {
         const notesList = [...notes]
-        if (!modalVisible) {
+        // console.log({ title: currentNote.title, description: currentNote.description });
+        if (!modalVisible && (!!currentNote?.title || !!currentNote?.description)) {
             if (id) {
                 const notesIndex = findIndex(notesList, (item) => { return id === item.id })
                 notesList.splice(notesIndex, 1, currentNote)
@@ -95,6 +102,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
     useEffect(() => {
         return saveOnLeaveScreen
     }, [currentNote, notes, modalVisible])
+
 
 
     useEffect(() => {
@@ -131,33 +139,57 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
 
     const colorsArray = [
         {
+            backgroundColor: undefined,
+            textColor: 'black',
+        },
+        {
             backgroundColor: WHITE,
             textColor: 'black',
         },
         {
-            backgroundColor: BEIGE,
+            // backgroundColor: BEIGE,
+            backgroundColor: '#C5EBFE',
+            textColor: 'blue',
+        },
+        {
+            // backgroundColor: KAKI,
+            backgroundColor: '#FEC9A7',
             textColor: 'brown',
         },
         {
-            backgroundColor: KAKI,
+            // backgroundColor: GREEN,
+            backgroundColor: '#A5F8CE',
             textColor: 'green',
         },
         {
-            backgroundColor: GREEN,
-            textColor: 'green',
+            // backgroundColor: GREY,
+            backgroundColor: '#FEFD97',
+            textColor: 'orange',
         },
         {
-            backgroundColor: GREY,
-            textColor: 'black',
-        },
-        {
-            backgroundColor: PINK,
+            // backgroundColor: PINK,
+            backgroundColor: '#F197C0',
             textColor: 'red',
         },
         {
-            backgroundColor: PURPLE,
-            textColor: 'black',
+            // backgroundColor: PURPLE,
+            backgroundColor: '#B49FDC',
+            textColor: 'purple',
         }
+    ]
+
+    const fontSize = [{
+        name: 'Small',
+        size: FONT_XSMALL,
+    },
+    {
+        name: 'Medium',
+        size: FONT_MEDIUM,
+    },
+    {
+        name: 'Large',
+        size: FONT_XLARGE,
+    },
     ]
 
     const Icons = [
@@ -179,13 +211,16 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                 setIsActive(true)
             },
         },
-        // {
-        //     name: 'bold',
-        //     family: 'FontAwesome5',
-        //     size: 30,
-        //     color: currentNote.noteDesign.textColor,
-        //     onPress: () => { setIsActive(false) },
-        // },
+        {
+            name: 'font',
+            family: 'Fontisto',
+            size: 25,
+            color: currentNote.noteDesign.textColor,
+            onPress: () => {
+                setShowFontSize(!showFontSize);
+                setIsActive(true)
+            },
+        },
         // {
         //     name: 'italic',
         //     family: 'Feather',
@@ -220,7 +255,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
             <View style={[styles.container, { paddingTop: headerHeight }]}>
                 <View style={styles.inputContainer}>
                     <TextInput
-                        style={[styles.title, { color: currentNote.noteDesign.textColor }]}
+                        style={[styles.title, { color: currentNote?.noteDesign?.textColor, fontSize: currentNote?.fontSize?.size }]}
                         placeholder={'Title (optional)'}
                         placeholderTextColor={`${currentNote?.noteDesign?.textColor}80`}
                         onChangeText={text => {
@@ -232,7 +267,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                         value={currentNote.title}
                     />
                     <TextInput
-                        style={[styles.text, { color: currentNote.noteDesign.textColor }]}
+                        style={[styles.text, { color: currentNote?.noteDesign?.textColor, fontSize: currentNote?.fontSize?.size }]}
                         placeholder={'Type details here'}
                         placeholderTextColor={`${currentNote?.noteDesign?.textColor}80`}
                         multiline={true}
@@ -297,6 +332,36 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                             </ScrollView>
                         </View>
                         )}
+                    {showFontSize === false ? null :
+                        (<View>
+                            <ScrollView
+                                contentContainerStyle={styles.scrollviewContainer}
+                                showsHorizontalScrollIndicator={false}
+                                snapToInterval={90}
+                                decelerationRate={'fast'}
+                                disableIntervalMomentum={true}
+                                scrollEventThrottle={16}
+                                horizontal>
+                                {fontSize.map((item) => {
+                                    return (
+                                        <FontSizeButton
+                                            key={item.name}
+                                            size={item.size}
+                                            name={item.name}
+                                            color={currentNote.noteDesign.textColor}
+                                            selected={currentNote?.fontSize?.name === item.name}
+                                            onPress={() => {
+                                                setCurrentNote({
+                                                    ...currentNote,
+                                                    fontSize: item,
+                                                });
+                                            }}
+                                        />
+                                    )
+                                })}
+                            </ScrollView>
+                        </View>
+                        )}
                     <View style={styles.icons}>
                         {Icons.map((icon) => {
                             return (
@@ -314,10 +379,13 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                     <DeleteNoteModal
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
-                        notes={notes}
-                        setNotes={setNotes}
-                        id={id}
-                        navigation={navigation}
+                        onDelete={async () => {
+                            const newNotes = notes.filter((item) => {
+                                return item?.id !== id
+                            })
+                            await storeData('notes', newNotes)
+                            navigation.goBack()
+                        }}
                     />
                 </View>
             </View >
@@ -350,12 +418,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
     },
     title: {
-        fontSize: FONT_XLARGE,
         padding: SPACE_MEDIUM,
     },
     text: {
         flex: 1,
-        fontSize: FONT_XLARGE,
         padding: SPACE_MEDIUM,
     },
     scrollviewContainer: {
@@ -367,6 +433,6 @@ const styles = StyleSheet.create({
     },
     icons: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
     }
 })

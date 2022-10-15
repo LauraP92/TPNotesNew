@@ -5,8 +5,12 @@ export type NoteType = {
     title: string | undefined,
     description: string | undefined,
     noteDesign: {
-        backgroundColor: ColorValue,
+        backgroundColor: ColorValue | undefined,
         textColor: ColorValue | string,
     },
     noteTextureId: number | null,
+    fontSize: {
+        name: string,
+        size: number,
+    },
 }
