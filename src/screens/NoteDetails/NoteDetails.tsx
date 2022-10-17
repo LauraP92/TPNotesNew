@@ -78,7 +78,6 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
 
     const saveOnLeaveScreen = () => {
         const notesList = [...notes]
-        // console.log({ title: currentNote.title, description: currentNote.description });
         if (!modalVisible && (!!currentNote?.title || !!currentNote?.description)) {
             if (id) {
                 const notesIndex = findIndex(notesList, (item) => { return id === item.id })
@@ -101,7 +100,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
 
     useEffect(() => {
         return saveOnLeaveScreen
-    }, [currentNote, notes, modalVisible])
+    }, [currentNote, notes, modalVisible, currentNote?.title])
 
 
 

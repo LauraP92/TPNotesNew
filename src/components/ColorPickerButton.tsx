@@ -11,7 +11,7 @@ interface Props {
 }
 const ColorPickerButton: FC<Props> = ({ color, onPress, selected }) => {
     return (
-        <Pressable style={[styles.circle, { backgroundColor: color, borderColor: color === WHITE || undefined ? BLACK : undefined, borderWidth: color === WHITE || undefined ? 1 : 0 }]} onPress={onPress}>
+        <Pressable style={[styles.circle, { backgroundColor: color, borderColor: color === WHITE || color === undefined ? BLACK : undefined, borderWidth: color === WHITE || color === undefined ? 1 : 0 }]} onPress={onPress}>
             {selected && <TemplateIcon style={styles.icon} name={'check'} color={BLACK} size={25} family={'Feather'}></TemplateIcon>}
         </Pressable>
     );
