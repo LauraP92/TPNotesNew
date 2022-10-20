@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextProps, TextStyle } from 'react-native';
 import React, { FC } from 'react';
 import { BLACK } from '../constants/COLORS';
-import { FONT_SMALL, SPACE_SMALL } from '../constants/LAYOUT';
+import { FONT_SMALL } from '../constants/LAYOUT';
 
 interface Props extends TextProps {
     style?: TextStyle,
@@ -19,6 +19,5 @@ const styles = StyleSheet.create({
     title: {
         color: BLACK,
         fontSize: FONT_SMALL,
-        marginLeft: SPACE_SMALL,
     },
 });

@@ -24,12 +24,13 @@ const styles = StyleSheet.create({
     circle: {
         marginHorizontal: SPACE_MEDIUM,
         height: 30,
-        width: 70,
+        minWidth: 70,
         borderRadius: RADIUS_MEDIUM,
         borderWidth: BORDER_SMALL,
         justifyContent: 'center',
         backgroundColor: WHITE,
     },
     text: {
+        textAlign: 'center',
     },
 });

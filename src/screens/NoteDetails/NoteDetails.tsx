@@ -220,27 +220,6 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                 setIsActive(true)
             },
         },
-        // {
-        //     name: 'italic',
-        //     family: 'Feather',
-        //     size: 30,
-        //     color: currentNote.noteDesign.textColor,
-        //     onPress: () => { setIsActive(false) },
-        // },
-        // {
-        //     name: 'format-underline',
-        //     family: 'MaterialCommunityIcons',
-        //     size: 35,
-        //     color: currentNote.noteDesign.textColor,
-        //     onPress: () => { setIsActive(false) },
-        // },
-        // {
-        //     name: 'check-square',
-        //     family: 'Feather',
-        //     size: 35,
-        //     color: currentNote.noteDesign.textColor,
-        //     onPress: () => { setIsActive(false) },
-        // },
     ];
 
     return (
@@ -348,7 +327,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                                             size={item.size}
                                             name={item.name}
                                             color={currentNote.noteDesign.textColor}
-                                            selected={currentNote?.fontSize?.name === item.name}
+                                            selected={currentNote?.fontSize?.size === item.size}
                                             onPress={() => {
                                                 setCurrentNote({
                                                     ...currentNote,

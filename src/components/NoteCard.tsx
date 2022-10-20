@@ -1,6 +1,6 @@
 import { ColorValue, Image, Pressable, StyleSheet, View } from 'react-native';
 import React, { FC } from 'react';
-import { BORDER_SMALL, RADIUS_MEDIUM, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_MEDIUM, SPACE_XLARGE, SPACE_XXLARGE } from '../constants/LAYOUT';
+import { BORDER_SMALL, RADIUS_MEDIUM, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_MEDIUM, SPACE_SMALL, SPACE_XLARGE, SPACE_XXLARGE } from '../constants/LAYOUT';
 import TemplateText from './TemplateText';
 import { BLUE, WHITE } from '../constants/COLORS';
 import TemplateIcon from './TemplateIcon';
@@ -26,7 +26,7 @@ const NoteCard: FC<Props> = ({ backgroundColor, textColor, title, description, i
         >
             {!!imageSource && (<Image style={styles.image} source={imageSource} />)}
             <View style={styles.cardContent}>
-                <TemplateText style={{ color: textColor }}>{title || description}</TemplateText>
+                <TemplateText style={[styles.text, { color: textColor }]}>{title || description}</TemplateText>
                 <TemplateIcon name='paint-roller' family='FontAwesome5' size={60} color={textColor} style={{ transform: [{ rotateZ: '-90deg' }, { rotateX: '360deg' }], opacity: 0.5 }}></TemplateIcon>
                 {!!selectionStarted && (<Pressable style={styles.circle} onPress={onPress}>
                     {!!isSelected && <TemplateIcon style={styles.icon} name={'check'} family={'Feather'} size={20} color={BLUE}></TemplateIcon>}
@@ -58,6 +58,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    text: {
+        marginLeft: SPACE_SMALL,
     },
     circle: {
         marginHorizontal: SPACE_MEDIUM,
