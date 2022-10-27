@@ -14,7 +14,7 @@ const DeleteCardButton: FC<Props> = ({ onPress }) => {
             <Pressable
                 style={styles.circle}
                 onPress={onPress}>
-                <TemplateIcon name="trash" size={35} color={BLUE} family='Feather' />
+                <TemplateIcon name='delete-empty' size={40} color={BLUE} family='MaterialCommunityIcons' />
             </Pressable>
         </View>
     );

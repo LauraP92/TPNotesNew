@@ -1,6 +1,6 @@
-import { StyleSheet, View, TextInput } from 'react-native'
+import { StyleSheet, View, TextInput, Animated } from 'react-native'
 import React, { FC, useState, useEffect, useRef } from 'react'
-import { BORDER_SMALL, FONT_LARGE, FONT_XLARGE, SPACE_MEDIUM } from '../../constants/LAYOUT'
+import { BORDER_SMALL, FONT_LARGE, FONT_XLARGE, SCREEN_WIDTH, SPACE_MEDIUM } from '../../constants/LAYOUT'
 import { BLUE } from '../../constants/COLORS'
 import TemplateIcon from '../../components/TemplateIcon'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -32,6 +32,8 @@ const Home: FC<Props> = ({ navigation }) => {
     const [isActive, setIsActive] = useState(false)
     const [modalVisible, setModalVisible] = useState(false)
     const [isPressed, setIsPressed] = useState(false)
+
+    const animatedWidth = useRef(new Animated.Value(SCREEN_WIDTH - 2 * SPACE_MEDIUM)).current
 
     const selectCard = (id: number) => {
         if (selectedCardIds.indexOf(id) !== -1) {
@@ -89,6 +91,17 @@ const Home: FC<Props> = ({ navigation }) => {
         }
     }, [isFocused])
 
+    useEffect(() => {
+        Animated.timing(
+            animatedWidth,
+            {
+                toValue: isPressed ? SCREEN_WIDTH - 65 - 3 * SPACE_MEDIUM : SCREEN_WIDTH - 2 * SPACE_MEDIUM,
+                duration: 300,
+                useNativeDriver: false,
+            }
+        ).start();
+    }, [isPressed])
+
 
     return (
         <View style={styles.container}>
@@ -105,7 +118,7 @@ const Home: FC<Props> = ({ navigation }) => {
                     setIsActive(false)
                 }}></SelectAllButton>}
             <View style={styles.searchContainer}>
-                <View style={[styles.searchInput, { width: !!isPressed ? 290 : 350 }]}>
+                <Animated.View style={[styles.searchInput, { width: animatedWidth }]}>
                     <TextInput
                         ref={searchRef}
                         style={styles.search}
@@ -133,26 +146,29 @@ const Home: FC<Props> = ({ navigation }) => {
                             setSearchTerm('');
                         }}
                     />
-                </View>
-                {!!isPressed ? (<CancelButton onPress={() => {
-                    if (searchTerm) {
-                        searchRef.current.blur()
-                        setSearchTerm('')
-                    } else if (searchTerm === '') {
-                        searchRef.current.blur()
-                    }
-                    setIsPressed(false)
-                }} />) : null}
+                </Animated.View>
+                <CancelButton
+                    isPressed={isPressed}
+                    onPress={() => {
+                        if (searchTerm) {
+                            searchRef.current.blur()
+                            setSearchTerm('')
+                        } else if (searchTerm === '') {
+                            searchRef.current.blur()
+                        }
+                        setIsPressed(false)
+                    }} />
             </View>
             <ScrollView style={styles.scrollViewContainer}>
                 {filteredNotes.length === 0 && searchTerm ? <View style={styles.noResultContainer}>
                     <TemplateText style={styles.noResult}>Ooops, nothing found with this {"\n"} description...</TemplateText>
-                </View> : filteredNotes.map((note) => {
+                </View> : filteredNotes.map((note, index) => {
                     return (
                         <NoteCard
                             isSelected={selectedCardIds.indexOf(note.id) !== -1}
                             selectionStarted={selectedCardIds.length !== 0 || isActive}
                             id={note.id}
+                            index={index}
                             title={note.title}
                             description={note.description}
                             backgroundColor={note.noteDesign.backgroundColor}
@@ -209,7 +225,6 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-evenly',
     },
     searchInput: {
         flexDirection: 'row',

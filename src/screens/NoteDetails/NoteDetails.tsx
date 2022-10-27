@@ -56,7 +56,6 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
     const [showColors, setShowColors] = useState(false)
     const [showFontSize, setShowFontSize] = useState(false)
 
-
     const getData = async (key: string) => {
         try {
             const jsonValue = await AsyncStorage.getItem(key);
@@ -102,8 +101,6 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
         return saveOnLeaveScreen
     }, [currentNote, notes, modalVisible, currentNote?.title])
 
-
-
     useEffect(() => {
         if (id && notes?.length) {
             const editedNote = notes.find((note) => {
@@ -146,32 +143,26 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
             textColor: 'black',
         },
         {
-            // backgroundColor: BEIGE,
             backgroundColor: '#C5EBFE',
             textColor: 'blue',
         },
         {
-            // backgroundColor: KAKI,
             backgroundColor: '#FEC9A7',
             textColor: 'brown',
         },
         {
-            // backgroundColor: GREEN,
             backgroundColor: '#A5F8CE',
             textColor: 'green',
         },
         {
-            // backgroundColor: GREY,
             backgroundColor: '#FEFD97',
             textColor: 'orange',
         },
         {
-            // backgroundColor: PINK,
             backgroundColor: '#F197C0',
             textColor: 'red',
         },
         {
-            // backgroundColor: PURPLE,
             backgroundColor: '#B49FDC',
             textColor: 'purple',
         }
@@ -236,6 +227,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                         style={[styles.title, { color: currentNote?.noteDesign?.textColor, fontSize: currentNote?.fontSize?.size }]}
                         placeholder={'Title (optional)'}
                         placeholderTextColor={`${currentNote?.noteDesign?.textColor}80`}
+                        multiline={true}
                         onChangeText={text => {
                             setCurrentNote({
                                 ...currentNote,
@@ -397,6 +389,7 @@ const styles = StyleSheet.create({
     },
     title: {
         padding: SPACE_MEDIUM,
+        fontWeight: 'bold',
     },
     text: {
         flex: 1,
