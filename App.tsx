@@ -1,26 +1,41 @@
-import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import TestComponent from './src/components/TestComponent';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import HomeScreen from './src/screens/Home/Home';
+import NoteDetails from './src/screens/NoteDetails/NoteDetails';
+import SplashScreen from 'react-native-splash-screen';
 
 
-const App = () => {
-  const test = false
+const Stack = createNativeStackNavigator();
+const App: () => Node = () => {
 
-  let name: string | null = 'Laura';
-
-  name = null
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
   return (
-    <ScrollView>
-      <TestComponent
-        containerStyle={[{ flex: 1 }, test && { borderBottomWidth: 1 }]}
-        textStyle={{ fontSize: 40, borderStyle: 'solid' }} color='#000000' title={{ name: 'Test' }}></TestComponent>
-    </ScrollView>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerBackVisible: true,
+          headerBackTitleVisible: false,
+          headerTitle: true,
+        }}>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="NoteDetails" component={NoteDetails} options={{
+          title: '',
+        }}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
 const styles = StyleSheet.create({
-
 });
 
 export default App;
