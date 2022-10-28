@@ -1,10 +1,10 @@
 import { StyleSheet, View, TextInput, Animated } from 'react-native'
 import React, { FC, useState, useEffect, useRef } from 'react'
-import { BORDER_SMALL, FONT_LARGE, FONT_XLARGE, SCREEN_WIDTH, SPACE_MEDIUM } from '../../constants/LAYOUT'
+import { BORDER_SMALL, FONT_LARGE, FONT_XLARGE, SCREEN_WIDTH, SPACE_LARGE, SPACE_MEDIUM } from '../../constants/LAYOUT'
 import { BLUE } from '../../constants/COLORS'
 import TemplateIcon from '../../components/TemplateIcon'
 import { ScrollView } from 'react-native-gesture-handler'
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { getStatusBarHeight } from 'react-native-status-bar-height'
 import NoteCard from '../../components/NoteCard'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import TemplateText from '../../components/TemplateText'
@@ -17,6 +17,8 @@ import CancelButton from '../../components/CancelButton'
 import DeleteCardButton from '../../components/DeleteCardButton'
 import SelectAllButton from '../../components/SelectAllButton'
 import DeleteNoteModal from '../../components/DeleteNoteModal'
+import LottieView from 'lottie-react-native'
+import SearchNotFound from '../../assets/SearchNotFound.json'
 
 
 interface Props {
@@ -128,9 +130,6 @@ const Home: FC<Props> = ({ navigation }) => {
                         onPressIn={() => {
                             setIsPressed(true)
                         }}
-                        // onPressOut={() => {
-                        //     setIsPressed(false)
-                        // }}
                         onChangeText={text => {
                             setSearchTerm(text);
                         }}
@@ -162,6 +161,9 @@ const Home: FC<Props> = ({ navigation }) => {
             <ScrollView style={styles.scrollViewContainer}>
                 {filteredNotes.length === 0 && searchTerm ? <View style={styles.noResultContainer}>
                     <TemplateText style={styles.noResult}>Ooops, nothing found with this {"\n"} description...</TemplateText>
+                    <View style={styles.animation}>
+                        <LottieView source={SearchNotFound} autoPlay loop />
+                    </View>
                 </View> : filteredNotes.map((note, index) => {
                     return (
                         <NoteCard
@@ -173,7 +175,6 @@ const Home: FC<Props> = ({ navigation }) => {
                             description={note.description}
                             backgroundColor={note.noteDesign.backgroundColor}
                             textColor={note.noteDesign.textColor}
-                            // fontSize={note.fontSize.name}
                             key={note.id}
                             navigation={navigation}
                             imageSource={!!note?.noteTextureId && TEXTURES[note?.noteTextureId]?.image}
@@ -248,12 +249,12 @@ const styles = StyleSheet.create({
     iconCheck: {
         position: 'absolute',
     },
-    scrollViewContainer: {
-        flex: 1,
-        marginBottom: 80,
-    },
     noResultContainer: {
-        flex: 1,
+        marginTop: SPACE_LARGE,
+        justifyContent: 'center',
+    },
+    animation: {
+        height: 250,
     },
     noResult: {
         color: BLUE,

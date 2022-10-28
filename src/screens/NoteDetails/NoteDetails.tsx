@@ -35,8 +35,6 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
     const id = route?.params?.id;
     const isFocused = useIsFocused()
     const [isActive, setIsActive] = useState(false)
-    // const isFocused = navigation.isFocused()
-
     const [notes, setNotes] = useState<NoteType[]>([]);
     const [currentNote, setCurrentNote] = useState<NoteType>({
         id: Date.now(),
@@ -223,32 +221,34 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
             <View style={[styles.colorOverlay, { backgroundColor: currentNote.noteDesign.backgroundColor }]} />
             <View style={[styles.container, { paddingTop: headerHeight }]}>
                 <View style={styles.inputContainer}>
-                    <TextInput
-                        style={[styles.title, { color: currentNote?.noteDesign?.textColor, fontSize: currentNote?.fontSize?.size }]}
-                        placeholder={'Title (optional)'}
-                        placeholderTextColor={`${currentNote?.noteDesign?.textColor}80`}
-                        multiline={true}
-                        onChangeText={text => {
-                            setCurrentNote({
-                                ...currentNote,
-                                title: text,
-                            })
-                        }}
-                        value={currentNote.title}
-                    />
-                    <TextInput
-                        style={[styles.text, { color: currentNote?.noteDesign?.textColor, fontSize: currentNote?.fontSize?.size }]}
-                        placeholder={'Type details here'}
-                        placeholderTextColor={`${currentNote?.noteDesign?.textColor}80`}
-                        multiline={true}
-                        onChangeText={text => {
-                            setCurrentNote({
-                                ...currentNote,
-                                description: text,
-                            })
-                        }}
-                        value={currentNote.description}
-                    />
+                    <ScrollView contentContainerStyle={styles.containerContentInput} style={styles.scrollViewInput} >
+                        <TextInput
+                            style={[styles.title, { color: currentNote?.noteDesign?.textColor, fontSize: currentNote?.fontSize?.size }]}
+                            placeholder={'Title (optional)'}
+                            placeholderTextColor={`${currentNote?.noteDesign?.textColor}80`}
+                            multiline={true}
+                            onChangeText={text => {
+                                setCurrentNote({
+                                    ...currentNote,
+                                    title: text,
+                                })
+                            }}
+                            value={currentNote.title}
+                        />
+                        <TextInput
+                            style={[styles.text, { color: currentNote?.noteDesign?.textColor, fontSize: currentNote?.fontSize?.size }]}
+                            placeholder={'Type details here'}
+                            placeholderTextColor={`${currentNote?.noteDesign?.textColor}80`}
+                            multiline={true}
+                            onChangeText={text => {
+                                setCurrentNote({
+                                    ...currentNote,
+                                    description: text,
+                                })
+                            }}
+                            value={currentNote.description}
+                        />
+                    </ScrollView>
                     {showColors === false ? null :
                         (<View>
                             <ScrollView
@@ -382,6 +382,12 @@ const styles = StyleSheet.create({
     inputContainer: {
         flex: 1,
     },
+    containerContentInput: {
+        flexGrow: 1
+    },
+    scrollViewInput: {
+        flex: 1,
+    },
     image: {
         height: SCREEN_HEIGHT,
         width: SCREEN_WIDTH,
@@ -392,8 +398,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     text: {
-        flex: 1,
         padding: SPACE_MEDIUM,
+        flex: 1,
+        textAlignVertical: 'top',
     },
     scrollviewContainer: {
         marginBottom: SPACE_MEDIUM,
