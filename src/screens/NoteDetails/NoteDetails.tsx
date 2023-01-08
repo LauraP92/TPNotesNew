@@ -133,34 +133,42 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
 
     const colorsArray = [
         {
+            id: 0,
             backgroundColor: undefined,
             textColor: 'black',
         },
         {
+            id: 1,
             backgroundColor: WHITE,
             textColor: 'black',
         },
         {
+            id: 2,
             backgroundColor: '#C5EBFE',
             textColor: 'blue',
         },
         {
+            id: 3,
             backgroundColor: '#FEC9A7',
             textColor: 'brown',
         },
         {
+            id: 4,
             backgroundColor: '#A5F8CE',
             textColor: 'green',
         },
         {
+            id: 5,
             backgroundColor: '#FEFD97',
             textColor: 'orange',
         },
         {
+            id: 6,
             backgroundColor: '#F197C0',
             textColor: 'red',
         },
         {
+            id: 7,
             backgroundColor: '#B49FDC',
             textColor: 'purple',
         }
@@ -287,7 +295,7 @@ const NoteDetails: FC<Props> = ({ route, navigation }) => {
                                 {colorsArray.map((item) => {
                                     return (
                                         <ColorPickerButton
-                                            key={item.backgroundColor}
+                                            key={item.id}
                                             color={item.backgroundColor}
                                             selected={currentNote?.noteDesign?.backgroundColor === item.backgroundColor}
                                             onPress={() => {
