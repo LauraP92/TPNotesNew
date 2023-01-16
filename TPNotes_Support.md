@@ -1,3 +1,3 @@
-**Contact Us**
+**Support**
 
-If you have any issues or questions about TPNotes app, please contact me at laurap.help@outlook.com
+If you have any issues or questions about TPNotes app, please contact laurap.help@outlook.com
